@@ -28,7 +28,7 @@ class Movie(models.Model):
                             unique=True, db_index=True, editable=False)
 
     def __str__(self):
-        return f"{self.title} '('{self.production_year}')'"
+        return f"{self.title} ({self.production_year})"
 
     class Meta:
         unique_together = ('title', 'production_year', 'time_in_minutes', 'description',)
@@ -52,7 +52,7 @@ class Show(models.Model):
                             unique=True, db_index=True, editable=False)
     
     def __str__(self):
-        return f"{self.slug}"
+        return f"{self.movie}"
 
 
 
