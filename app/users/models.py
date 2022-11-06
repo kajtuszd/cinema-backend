@@ -9,8 +9,7 @@ class User(AbstractUser):
     phone = models.CharField(unique=True, null=True,
                              max_length=15, validators=[
                              RegexValidator(r'^\+?1?\d{9,15}$')])
-    is_customer = models.BooleanField(default=True)
-    is_worker = models.BooleanField(default=True)
+    is_moderator = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
