@@ -41,7 +41,7 @@ class Hall(models.Model):
                             unique=True, db_index=True, editable=False)
 
     def __str__(self):
-        return f"{self.slug}"
+        return f"{self.hall_number} ({self.seats_number} places)"
 
 
 class Show(models.Model):
@@ -53,7 +53,6 @@ class Show(models.Model):
     
     def __str__(self):
         return f"{self.movie}"
-
 
 
 class Seat(models.Model):
