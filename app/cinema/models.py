@@ -67,7 +67,7 @@ class Seat(models.Model):
 
 class Ticket(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    seat = models.ForeignKey(Seat, on_delete=models.CASCADE, null=True)
+    seat = models.OneToOneField(Seat, on_delete=models.CASCADE, null=True)
     price = models.PositiveIntegerField(default=20, validators=[MaxValueValidator(100)])
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
