@@ -6,22 +6,25 @@ from users.models import User
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
-    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=True)
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    password = serializers.CharField(style={'input_type': 'password'},
+                                     write_only=True, required=True,
+                                     validators=[validate_password])
+    password2 = serializers.CharField(style={'input_type': 'password'},
+                                      write_only=True, required=True)
 
     class Meta:
         model = User
         fields = [
             'username',
-            'password', 
+            'password',
             'password2',
             'email',
             'first_name',
             'last_name'
-            ]
+        ]
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True}
@@ -29,7 +32,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError(
+                {"password": "Password fields didn't match."})
         return attrs
 
     def create(self, validated_data):
@@ -42,4 +46,3 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
-        
