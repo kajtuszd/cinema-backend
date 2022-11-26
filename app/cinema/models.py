@@ -40,12 +40,10 @@ class Movie(models.Model):
 
 
 class Hall(models.Model):
-    hall_number = models.PositiveIntegerField(blank=False, unique=True)
+    hall_number = models.PositiveIntegerField(primary_key=True, blank=False, unique=True)
     seats_number = models.PositiveIntegerField(blank=False, default=50,
                                                validators=[
                                                    MaxValueValidator(200)])
-    slug = models.CharField(default=generate_slug, max_length=10,
-                            unique=True, db_index=True, editable=False)
 
     def __str__(self):
         return f"{self.hall_number} ({self.seats_number} places)"
