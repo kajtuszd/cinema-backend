@@ -21,8 +21,12 @@ SEAT_STATES = (
 
 class Movie(models.Model):
     title = models.CharField(max_length=50, blank=False)
-    production_year = models.PositiveIntegerField(default=get_current_year(), validators=[MinValueValidator(1950), max_value_current_year])
-    time_in_minutes = models.PositiveIntegerField(blank=False, validators=[MaxValueValidator(300)])
+    production_year = models.PositiveIntegerField(default=get_current_year(),
+                                                  validators=[
+                                                      MinValueValidator(1950),
+                                                      max_value_current_year])
+    time_in_minutes = models.PositiveIntegerField(blank=False, validators=[
+        MaxValueValidator(300)])
     description = models.CharField(max_length=200, blank=True, null=True)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
@@ -31,12 +35,15 @@ class Movie(models.Model):
         return f"{self.title} ({self.production_year})"
 
     class Meta:
-        unique_together = ('title', 'production_year', 'time_in_minutes', 'description',)
+        unique_together = (
+            'title', 'production_year', 'time_in_minutes', 'description',)
 
 
 class Hall(models.Model):
     hall_number = models.PositiveIntegerField(blank=False, unique=True)
-    seats_number = models.PositiveIntegerField(blank=False, default=50, validators=[MaxValueValidator(200)])
+    seats_number = models.PositiveIntegerField(blank=False, default=50,
+                                               validators=[
+                                                   MaxValueValidator(200)])
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
 
@@ -50,7 +57,7 @@ class Show(models.Model):
     start_time = models.DateTimeField(null=True)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
-    
+
     def __str__(self):
         return f"{self.movie}"
 
@@ -60,7 +67,7 @@ class Seat(models.Model):
     state = models.IntegerField(choices=SEAT_STATES, default=1)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
-    
+
     def __str__(self):
         return f"{self.slug}"
 
@@ -68,7 +75,8 @@ class Seat(models.Model):
 class Ticket(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE, null=True)
-    price = models.PositiveIntegerField(default=20, validators=[MaxValueValidator(100)])
+    price = models.PositiveIntegerField(default=20,
+                                        validators=[MaxValueValidator(100)])
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
 
