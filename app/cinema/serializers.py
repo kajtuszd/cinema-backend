@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Movie, Hall
+from .models import Movie, Hall, Show
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -29,4 +29,19 @@ class HallSerializer(serializers.ModelSerializer):
         lookup_field = 'hall_number'
         extra_kwargs = {
             'url': {'lookup_field': 'hall_number'}
+        }
+
+
+class ShowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Show
+        fields = [
+            'movie',
+            'hall',
+            'start_time',
+            'slug',
+        ]
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
         }

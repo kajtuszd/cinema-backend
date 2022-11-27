@@ -51,7 +51,7 @@ class Hall(models.Model):
 
 class Show(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    hall = models.ForeignKey(Hall, on_delete=models.SET_NULL, null=True, blank=False)
     start_time = models.DateTimeField(null=True)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
