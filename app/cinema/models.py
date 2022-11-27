@@ -1,6 +1,7 @@
 from datetime import date
-from django.db import models
+
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from users.models import User
 from utils.slugs import generate_slug
 
@@ -61,7 +62,8 @@ class Show(models.Model):
 
 
 class Seat(models.Model):
-    show = models.ForeignKey(Show, on_delete=models.CASCADE, null=True)
+    show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name='seats',
+                             null=True)
     state = models.IntegerField(choices=SEAT_STATES, default=1)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
