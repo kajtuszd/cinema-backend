@@ -1,6 +1,7 @@
 from datetime import date
-from django.db import models
+
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 from users.models import User
 from utils.slugs import generate_slug
 
@@ -40,12 +41,10 @@ class Movie(models.Model):
 
 
 class Hall(models.Model):
-    hall_number = models.PositiveIntegerField(blank=False, unique=True)
+    hall_number = models.PositiveIntegerField(primary_key=True, blank=False, unique=True)
     seats_number = models.PositiveIntegerField(blank=False, default=50,
                                                validators=[
                                                    MaxValueValidator(200)])
-    slug = models.CharField(default=generate_slug, max_length=10,
-                            unique=True, db_index=True, editable=False)
 
     def __str__(self):
         return f"{self.hall_number} ({self.seats_number} places)"
@@ -53,7 +52,7 @@ class Hall(models.Model):
 
 class Show(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    hall = models.ForeignKey(Hall, on_delete=models.CASCADE)
+    hall = models.ForeignKey(Hall, on_delete=models.SET_NULL, null=True, blank=False)
     start_time = models.DateTimeField(null=True)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
@@ -63,7 +62,8 @@ class Show(models.Model):
 
 
 class Seat(models.Model):
-    show = models.ForeignKey(Show, on_delete=models.CASCADE, null=True)
+    show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name='seats',
+                             null=True)
     state = models.IntegerField(choices=SEAT_STATES, default=1)
     slug = models.CharField(default=generate_slug, max_length=10,
                             unique=True, db_index=True, editable=False)
