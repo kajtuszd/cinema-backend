@@ -4,9 +4,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.permissions import IsModerator
 
-from .models import Hall, Movie, Show
+from .models import Hall, Movie, Show, Ticket
+from .permissions import IsModeratorOrOwner
 from .serializers import (HallSerializer, MovieSerializer, SeatSerializer,
-                          ShowSerializer)
+                          ShowSerializer, TicketSerializer)
 
 
 class MovieViewSet(viewsets.ModelViewSet):
@@ -53,3 +54,18 @@ class ShowViewSet(viewsets.ModelViewSet):
         show = self.get_object()
         seats_serializer = SeatSerializer(show.seats.all(), many=True)
         return Response(seats_serializer.data)
+
+
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = [IsModeratorOrOwner,]
+    lookup_field = 'slug'
+
+    def get_queryset(self, *args, **kwargs):
+        if self.request.user.is_moderator:
+            return self.queryset
+        return self.queryset.filter(owner=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)

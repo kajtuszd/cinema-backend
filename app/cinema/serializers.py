@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from users.serializers import UserSerializer
 
-from .models import Hall, Movie, Seat, Show
+from .models import Hall, Movie, Seat, Show, Ticket
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -49,6 +50,23 @@ class ShowSerializer(serializers.ModelSerializer):
             'movie',
             'hall',
             'start_time',
+            'slug',
+        ]
+        lookup_field = 'slug'
+        extra_kwargs = {
+            'url': {'lookup_field': 'slug'}
+        }
+
+
+class TicketSerializer(serializers.ModelSerializer):
+    seat = SeatSerializer()
+    owner = UserSerializer()
+    class Meta:
+        model = Ticket
+        fields = [
+            'owner',
+            'seat',
+            'price',
             'slug',
         ]
         lookup_field = 'slug'
